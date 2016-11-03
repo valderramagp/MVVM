@@ -1,4 +1,4 @@
-package agenda;
+package agenda.Models;
 
 /**
  * Created by gusta on 03/11/2016.
