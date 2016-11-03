@@ -1,23 +1,45 @@
 package agenda.DBConnection;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Created by gusta on 03/11/2016.
  */
 public class DBRepo {
     private static Connection connection = null;
+    public static DBRepo db;
+    private Statement statement;
     private static final String HOST = "jdbc:mysql://localhost/agenda";
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
-    public static Connection getConnection() throws SQLException, ClassNotFoundException {
-        if(connection == null) {
+    private DBRepo() {
+        try {
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(HOST, USER, PASSWORD);
+            this.connection = DriverManager.getConnection(HOST, USER, PASSWORD);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return connection;
+    }
+
+    public static synchronized DBRepo getConnection() {
+        if(db == null) {
+            db = new DBRepo();
+        }
+        return db;
+    }
+
+    public ResultSet query(String query) throws SQLException {
+        statement = db.connection.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+        return rs;
+    }
+
+    public int insert(String query) throws SQLException {
+        statement = db.connection.createStatement();
+        int result = statement.executeUpdate(query);
+        return result;
     }
 
 }
