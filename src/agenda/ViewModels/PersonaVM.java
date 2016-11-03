@@ -2,7 +2,6 @@ package agenda.ViewModels;
 
 import agenda.DBConnection.DBRepo;
 import agenda.Models.Persona;
-import agenda.Views.DetallePersona;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +17,7 @@ public class PersonaVM {
         con = DBRepo.getConnection();
     }
 
-    public ArrayList<Persona> GetPersonas() {
+    public void GetPersonas() {
         ArrayList<Persona> personas = new ArrayList<Persona>();
         String sql = "SELECT * FROM persona";
         try {
@@ -30,7 +29,6 @@ public class PersonaVM {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return personas;
     }
 
     public void GetPersona(int idPersona){
@@ -41,8 +39,17 @@ public class PersonaVM {
 
             if(rs.next()){
                 Persona persona = new Persona(rs.getInt("id"), rs.getString("nombre"), rs.getString("telefono"), rs.getString("correo"));
-                DetallePersona dp = new DetallePersona(persona);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void Create(String nombre, String telefono, String correo){
+        Persona persona = new Persona(0, nombre, telefono, correo);
+        String sql = "INSERT INTO persona VALUES (null, '" + persona.getNombre() + "', '" + persona.getTelefono()+ "', '" + persona.getCorreo() + "');";
+        try {
+            con.insert(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
