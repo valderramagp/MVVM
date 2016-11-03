@@ -33,7 +33,6 @@ public class PersonaVM {
 
     public void GetPersona(int idPersona){
         try {
-
             String sql = "SELECT * FROM persona WHERE id = " + idPersona;
             ResultSet rs = con.query(sql);
 
